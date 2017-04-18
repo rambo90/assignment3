@@ -1,12 +1,13 @@
 package myprojects.automation.assignment3;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 
 import static myprojects.automation.assignment3.utils.Properties.getBaseAdminUrl;
 
@@ -38,25 +39,20 @@ public class GeneralActions {
         WebElement categoriesLink = driver.findElement(this.categoriesLink);
         Actions actions = new Actions(driver);
         actions.moveToElement(catalogLink).click(categoriesLink).build().perform();
-        try {
-            driver.findElement(By.xpath("//td[@class='pointer' and normalize-space(.) = '" + categoryName + "']"));
-            System.out.println("There is already a category named " + categoryName + " in Categories table");
-        } catch (NoSuchElementException e) {
-            driver.findElement(this.add).click();
-            driver.findElement(this.name).sendKeys(categoryName);
-            driver.findElement(this.save).click();
-        }
+        driver.findElement(this.add).click();
+        driver.findElement(this.name).sendKeys(categoryName);
+        driver.findElement(this.save).click();
         driver.findElement(sortUp).click();
     }
 
     public void checkCategory(String categoryName) {
         waitForContentLoad(By.cssSelector("#table-category"));
-        try {
-            driver.findElement(By.xpath("//td[@class='pointer' and normalize-space(.) = '" + categoryName + "']"));
-            System.out.println("The new category appeared in Categories table");
-        } catch (NoSuchElementException e) {
+        List<WebElement> elements = driver.findElements(By.xpath("//td[@class='pointer' and normalize-space(.) = '" + categoryName + "']"));
+        if (elements.size() == 0){
             System.out.println("There is no such category in Categories table");
-        }
+        } else if (elements.size() ==1){
+            System.out.println("The new category appeared in Categories table");
+        } else System.out.println("There are two or more identical categories");
     }
 
     private void waitForContentLoad(By by) {

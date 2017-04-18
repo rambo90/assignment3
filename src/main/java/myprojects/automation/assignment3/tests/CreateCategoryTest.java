@@ -21,6 +21,6 @@ public class CreateCategoryTest extends BaseScript {
 
         actions.checkCategory(categoryName);
 
-        driver.close();
+//        driver.close();
     }
 }
